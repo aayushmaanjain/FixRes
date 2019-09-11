@@ -1,6 +1,6 @@
 """
 1. Clone repository
-2. Provide ImageNet Path on line 99
+2. [Skip] ~Provide ImageNet Path on line 99~
 3. Run script with Python3.6 (that's the one I ran with): $ python3.6 resnext.py
 
 Docker Image: rocm2.7_ubuntu16.04_py3.6_pytorch
@@ -99,7 +99,8 @@ def main():
     
     ## DataLoaders
     transformation = get_transforms(input_size=320, test_size=320, kind='full', crop=True, need=('train','val'), backbone=None)
-    trainset = torchvision.datasets.ImageFolder('/data/imnet/train', transform=transformation['val']) # ImageNet path
+    # trainset = torchvision.datasets.ImageFolder('/data/imnet/train', transform=transformation['val']) # ImageNet path
+    trainset = torchvision.datasets.FakeData(size=6500, image_size=(3,224,224), num_classes=1000, transform=transformation['val'])
     trainloader = DataLoader(trainset, batch_size=batch_size, num_workers=2)
 
     ## Model, Optimizer, Scheduler
