@@ -113,7 +113,10 @@ def main():
 
     ## Training
     model.train()
-
+    losses = AverageMeter('Loss', ':.4e')
+    top1 = AverageMeter('Acc@1', ':6.2f')
+    top5 = AverageMeter('Acc@5', ':6.2f')
+    
     for i, data in enumerate(trainloader):
         images, target = data
         print("Sending data to GPU", flush=True)
@@ -133,12 +136,13 @@ def main():
         optimizer.step()
         # lrscheduler.step()
 
-        acc1 = accuracy(output, target, topk(1))
+        acc1, acc5 = accuracy(output, target, (1,5))
         losses.update(loss.item(), images.size(0))
         top1.update(acc1[0], images.size(0))
+        top5.update(acc5[0], images.size(0))
 
         if i+1 % print_freq == 0:
-            print(" * TRAIN: Acc@1 {top1.epoch_avg:.3f}".format(top1=top1))
+            print(' * TRAIN: Acc@1 {top1.epoch_avg:.3f} Acc@5 {top5.epoch_avg:.3f}'.format(top1=top1, top5=top5))
 
 if __name__ == '__main__':
     main()
